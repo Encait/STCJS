@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title> STCJS - Example 2 </title>	
+		
+		<!-- #1 RECOMMENDED LIBRARIES-->
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+	    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+		<!-- stc ########################## -->
+		<script src="assets/lib/three-r73.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/CombinedCamera.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/OrbitControls.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/trajectory.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/stcjs.js"></script>
+		<script src="assets/lib/simpleheat-gh-pages/simpleheat.js"></script>
+		<!-- JUST USING THIS TO PROVIDE SOME TIMES -->
+		<script src="assets/js/nytyles.js"></script>
+
+		<!-- MAIN SCRIPT -->
+		<script type="text/javascript">
+			var stc;
+			// random example: lat, lng, unix timestamp, label
+			var exampleData = 
+			[
+				40.678234,-73.982559,1357003080,"a", 
+				40.678234,-73.982559,1357003200,"b",
+				40.678234,-73.982559,1357003260,"c",
+				40.695877,-73.969681,1357003980,"d",
+				40.695877,-73.969681,1357004040,"e",
+				40.719265,-73.990105,1357005360,"f",
+				40.752537,-73.973068,1357005540,"g",
+				40.784702,-73.967560,1357006620,"h"
+			]
+
+			$(window).ready( function(){
+				initSTC();
+				uploadData();
+			});
+
+			// Create the STC
+			function initSTC()
+			{
+				var container = document.getElementById( "stcContainer" );
+				var properties = {
+					div: stcContainer,
+					div: stcContainer,
+					size: {x:500, y:500, z:500},
+					pov: {x:0, y:0, z:1250},
+					tiles: NY_TYLES(),
+					timeAxisHighlightStyle: new STCJS.LineStyle( { alpha: 1, colour: new THREE.Color(0x000000), dashed: false } ),
+					spaceHighlightStyle: 	new STCJS.LineStyle( { alpha: 1, colour: new THREE.Color(0x000000), linewidth: 2, dashed: false } )
+				};
+
+				stc = new STCJS( properties );
+				stc.drawSTC();
+			}
+
+			// Draw data into the STC
+			function uploadData()
+			{
+				var data = new STPointSet( "example" );
+				var points = [];
+				for( var i = 0; i < exampleData.length; i+=4 )
+				{
+					var point = new STPoint( exampleData[i], exampleData[i+1], 0, exampleData[i+2], exampleData[i+3], {label:exampleData[i+4]} );
+					points.push( point );
+				}
+				data.appendPoints( points );
+				data.boundingBox();
+
+				// Create and stylize the layer
+				var layer = new STCJS.SpatioTemporalLayer( "Example Layer", data, {
+					styleHighlights: customHighlights,
+					stylePoints: customPoints, // or null if no points are to be drawn
+					styleLines: customLines // // or null if no points are to be drawn
+				});
+				stc.addLayers( [layer], true );
+			}
+
+			// each point will have a random colour and a random transparency
+			function customPoints( data, dataPoint, dataPointIndex )
+			{
+
+				var texture = THREE.ImageUtils.loadTexture( "./assets/img/glyphs/def2.png" );
+				var colour = (dataPointIndex % 2 == 0 )? 0xff0000 : 0x0000ff;// UTILS.getRandomColour();
+				var styleProperties = {
+					size: 10, 
+					colour: new THREE.Color( colour ), 
+					texture: texture,
+					alpha: 1 //0.5+Math.random()/2
+				};
+				// particle point
+				var style = new STCJS.PointStyle( styleProperties );
+				// cube point
+				//var style = new STCJS.CubeStyle( styleProperties );
+
+				return style; // if you return null, "this" point will not be drawn
+			}
+
+			// each line will have a random gradient
+			function customLines( data, dataPoint, dataPointIndex, dataPointIndex2 )
+			{
+				var startColour = new THREE.Color( UTILS.getRandomColour() );
+				var endColour = new THREE.Color( UTILS.getRandomColour() );
+
+				var styleProperties = {
+					startColour: startColour,
+					endColour: endColour,
+					startAlpha: 0.5,
+					endAlpha: 1,
+					startLineWidth: 1,
+					endLineWidth: 2
+				};
+
+				// thin line
+				var style = new STCJS.LineStyle( styleProperties );
+				// thick line 
+				//var style = new STCJS.PolyLineStyle( styleProperties );
+
+				return style; // if you return null, "this" line segment will not be drawn
+			}
+
+			// will simply turn the feature black
+			function customHighlights( data, dataPoint, dataPointIndex, dataPointStyle ){
+
+				var styleProperties;
+				var style;
+				if( dataPointStyle instanceof STCJS.PolyLineStyle || dataPointStyle instanceof STCJS.LineStyle )
+				{	
+					styleProperties = {
+						colour: new THREE.Color( 0x000),
+						startColour: new THREE.Color( 0x000),
+						endColour: new THREE.Color( 0x000),
+						startAlpha: 1,
+						endAlpha: 1,
+						startLineWidth: 2,
+						endLineWidth: 3
+					};
+					if( dataPointStyle instanceof STCJS.PolyLineStyle )
+						style = new STCJS.PolyLineStyle( styleProperties );
+					else
+						style = new STCJS.LineStyle( styleProperties );
+				}
+				else
+				{
+					styleProperties = {
+						colour: dataPointStyle.colour,
+						size: dataPointStyle.size + 5,
+						alpha: 1
+					};	
+					style = new STCJS.Style( styleProperties );
+				}
+
+				return style
+			}
+
+		</script>
+
+		<!-- STYLES -->
+		<style type="text/css">
+			#stcContainer
+			{
+				width: 700px;
+				height: 700px;
+				border: 1px solid black;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="main_container">
+			<h1>Example #2: Customize points/lines</h1>
+			<div id="stcContainer"></div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,1205 @@
+Available on trajectory.js
+
+STPoint
+Class representing a spatio temporal point
+
+Constructor
+/**
+ * @param lat - Float latitude
+ * @param lon - Float longitude
+ * @param alt - Float altitude
+ * @param time - Number unix timestamp
+ * @param attr - Object attributes
+ */ 
+STPoint( lat, lon, alt, time, attr )
+
+/**
+ * @param lat - number
+ * @param lon - number 
+ * @param alt - number
+ */ 
+.setCoordinates( lat, lon, alt )
+
+/**
+ * @param timestamp
+ */ 
+.setTime( timestamp )
+
+/**
+ * @param attr
+ */ 
+.setAttributes( attr )
+
+/**
+ * Determines if two points are at the same position
+ * @param otherPoint - STPoint point to compare
+ * @returns true|false if other point is at the same position as this
+ */ 
+.equalsPosition( otherPoint )
+
+/**
+ * Determines if two points were detected at the same time
+ * @param otherPoint - STPoint point to compare
+ * @returns true|false if other point is at the same temporal position as this
+ */ 
+.equalsTime( otherPoint )
+
+/**
+ * Determines if a point was detected before or after a certain time
+ * @param timestamp - number unix timestamp to compare
+ * @returns number {0,1,-1} depending if this was detected at the same time, after, or before timestamp
+ */ 
+.compareTime( timestamp )
+
+
+/**
+ * Creates a copy of this STPoint
+ * @returns - STPoint
+ */ 
+.copy()
+
+/**
+ * Calculates the distance of this point to a certain location
+ * @param lat1 - float latitude
+ * @param lon1 - float longitude
+ * @param unit - string "K" or "N" for Kms or.... something I can't remember
+ */ 
+.distanceTo( lat1, lon1, unit )
+
+/** */ 
+toString()
+
+########################################################################################################
+
+STPeriod
+Class representing a space time period
+
+Constructor
+/**
+ * @param lat - Float latitude
+ * @param lon - Float longitude
+ * @param alt - Float altitude
+ * @param start - Number begining unix timestamp
+ * @param end - Number ending unix timestamp
+ * @param attr - Object attributes
+ */ 
+STPeriod( lat, lon, alt, start, end, attr )
+
+/**
+ * @returns STPoint equivalent to this STPeriod
+ *  start and end timestamps are available at the attributes section
+ */
+.toSTPoint()
+
+/**
+ * @param lat
+ * @param lon
+ * @param alt
+ */ 
+.setCoordinates( lat, lon, alt )
+
+/**
+ * @param timestamp_start
+ * @param timestamp_end
+ */ 
+.setTime( timestamp_start, timestamp_end )
+
+/**
+ * @param attr
+ */ 
+.setAttributes( attr )
+
+/**
+ * Determines if two points are at the same position
+ * @param otherPoint - STPoint point to compare
+ * @returns true|false if other point is at the same position as this
+ */ 
+.equalsPosition( otherPoint )
+
+/**
+ * Creates a copy of this STPeriod
+ * @returns - STPeriod a copy of this
+ */ 
+.copy()
+
+########################################################################################################
+
+STPointSet
+Class representing a set of spatio temporal points
+
+Constructor
+/**
+ * @param name - name of this point set
+ */
+STPointSet( name )
+
+Properties
+.uuid 		- string
+.name 		- string
+.points 	- Array of STPoint s
+.attributes - object for setting custom attributes
+.bbox 		- object {.up, .down, .left, .right} defining the geographical area represented
+.timeSpan 	- object {.start, .end } defining the temporal boundaries represented (start and end times)
+
+Methods
+/**
+ * Adds points to the set
+ * @param stpoints Array of STPoint 
+ */ 
+.appendPoints( stpoints )
+
+/**
+ * Adds attributes/semantic information to the set
+ * @param attr key:value array with the attributes
+ */ 
+.addAttributes( attr )
+
+/**
+ * Calculates the bounding box containing this point set
+ * @returns key:value array with the values of the coordinates for up, down, left, and right
+ */ 
+.boundingBox()
+
+/**
+ * Returns the time period when this point set was detected
+ * @returns key:value array with the start and end time values of this point set
+ */
+.timePeriod()
+
+########################################################################################################
+
+STPeriodSet
+Class representing a set of spatio-temporal points
+
+/**
+ * @param name - name of this point set
+ */
+STPeriodSet( name )
+
+Properties
+.uuid 		- string
+.name 		- string
+.points 	- Array of STPeriod s
+.attributes - object for setting custom attributes
+.bbox 		- object {.up, .down, .left, .right} defining the geographical area represented
+.timeSpan 	- object {.start, .end } defining the temporal boundaries represented (start and end times)
+
+Methods
+/**
+ * Adds points to the set
+ * @param stpoints Array of STPeriod 
+ */  
+appendPoints( stpoints )
+
+/**
+ * Adds attributes/semantic information to the set
+ * @param attr key:value array with the attributes
+ */ 
+addAttributes( attr )
+
+/**
+ * Calculates the bounding box containing this trajectory
+ * @returns key:value array with the values of the coordinates for up, down, left, and right
+ */ 
+boundingBox()
+
+/**
+ * Returns the time period when this trajectory was detected
+ * @returns key:value array with the start and end time values of this trajectory
+ */
+timePeriod()
+
+########################################################################################################
+
+UTILS
+"Class" with useful methods
+
+/**
+ * Generates a uuid...
+ * @returns - string random uuid
+ */ 
+.generateUUID()
+
+/**
+ * Generates a random string
+ * @param size - number - size of the string to be generated
+ * @param charset - array of string with the characters that can be used to generate the string
+ * @returns random string
+ */
+.generateRandomString(size, charset)
+
+/**
+ * @param startColour
+ * @param endColour
+ * @param startAlpha
+ * @param endAlpha
+ */
+.generateGradientTexture( startColour, endColour, startAlpha, endAlpha )
+
+/**
+ * Converts one value from one scale to the other
+ * (note: this 'behaves' as linear scale transformation)
+ * @param domain array with two values representing the min and max values the input value can hold
+ * @param range array with two values representing the min and max values the transformed input value can be
+ * @param input value bellonging to domain to be converted into one bellonging to range
+ * @returns converted input
+ */ 
+.scaleDimension( domain, range, input )
+
+/**
+ * Returns the screen location of an html object 
+ * @param obj - object to locate
+ * @return an array with two positions with the left and top positions of the object
+ */ 
+.findObjectPosition( obj ) 
+
+/**
+ * Generates a colour code randomly
+ * @returns colour code in the #RRGGBB string format
+ */ 
+.getRandomColour()
+
+/**
+ * Verifies if a certain value is a number
+ * @param n - value to be verified
+ * @returns true if n is a number, false otherwise
+ */ 
+.isNumber(n) 
+
+/**
+ * Determines if a point is inside a certain area
+ * @param point - array with 2 positions representing the x, y coordinates of an element
+ * @param area - array with 4 positions representing the area to be tested
+ */ 
+.contains( point, area )
+
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/math/is-point-in-poly [rev. #0]
+.isPointInPoly(poly, pt)
+
+/**
+ * Converts degrees to radians
+ * @param angle
+ * @returns angle in radians
+ */
+.deg2rad(angle) 
+
+
+########################################################################################################
+########################################################################################################
+Available on stcjs.js
+
+STCJS
+STC Class for the visualization of spatio-temporal data
+
+Constructor
+
+/**
+ * @param stcproperties - object with configuration properties, including:
+ * 		div (mandatory) 		dom object where the stc will be set
+ *		tiles 					STCJS.TilesControl with the various tiles/maps to be used
+ *		map 					THREE.Texture representing the texture on the base of the map
+ *		inverted_cam_controls	true | false(default) - to set the left mouse button to drag the view or rotate it, respectively  
+ *		forced2D				true | false (default) - forces the cube to stay a 2D plane
+ *		control_z_scale: 		true(default) | false - to allow the resize of the STC's heigth
+ *		control_semantic_zoom: 	true(default) | false - to allow zoom in/out operations on the STC's map 
+ *								- This feature is dependent on the <tiles> used
+ *		control_semantic_loc: 	true(default) | false - to allow pan operations on the STC's map
+ *								- This feature is dependent on the <tiles> used
+ *		pov: 					THREE.Vector3(0,0,50)(default) - position of the camera 
+ *		size:  					{200, 200, 200}(default) - {x, y, z} Object representing the size of the cube
+ *		max_height				2*size.y (default) - max vertical size
+ *		cube_pos				{0,0,0}(default) - {x,y,z} Object representing the position of the STC in the scene
+ *		width					stcproperties.div.width(default) - width of the view used to represent the STC
+ *		heigth					stcproperties.div.height(default) - height of the view used to represent the STC
+ *		show_time_axis_lines: 	true(default) | false - to display lines along the STC's height to help dividing time
+ *		show_time_axis_lables: 	true(default) | false - to display labels along the STC's height to identify the time at a certain point
+ *		temporal_unity: 		STCJS.UTILS.TIME_FLAGS.NONE (default) - value in seconds that defines the gaps between each line/label (described above)
+ * 								- By default this value can take the following values, depending on the time period represented within the STC:
+ *									- STCJS.UTILS.TIME_FLAGS.ONE_MONTH : 30 days
+ *									- STCJS.UTILS.TIME_FLAGS.ONE_WEEK : 7 days
+ *									- STCJS.UTILS.TIME_FLAGS.ONE_DAY : 24 hours
+ *									- STCJS.UTILS.TIME_FLAGS.ONE_HOUR : 60 seconds
+ *		first_time_label: 		null(default) - temporal location of the first time_axis_label
+ *		format_time_label: 		function( time, time_unit ) - function to override in order to format what is displayed on each label
+ *									@param time - time in seconds?
+ *									@time_unit - similar to temporal_unit (described above)
+ *		timeAxisHighlightStyle: STCJS.LineStyle( { alpha: 1, colour: new THREE.Color(0xff0000), dashed: false } ) (default) 
+ * 								- style for the structure that appears when the user interacts with the STC's temporal plane
+ *		spaceHighlightStyle: 	STCJS.LineStyle( { alpha: 1, colour: new THREE.Color(0xff0000), linewidth: 2, dashed: false } ) (default)
+ *								- style for the structure that appears when the user highlights a spatial point and/or location
+ *		boundingBox: 			{up: _, down: _, left: _, right: _, start: _, end: _} - delimits the spatial and temporal bounds of the STC
+ *								- by default it will be calculated in function of the data displayed
+ *		highlightMapPlane: 		true(default) | false - to determine if, when the user interacts with the cube, a copy of the spatial map will be 
+ *								displayed in the STC at the mouse's heigth postion
+ *		inverted				true | false (default) - time increases with STC size 
+ *
+ *	Untested properties of version 3.3 onwards
+ *		show_overview: 			true | false (default)
+ *		overview_scale: 		0.85 (default)		
+ *		drawShadows: 			true(default) | false - depricated with new menu options
+ *		highlightTimeAxis: 		true(default) | false
+ *
+ *
+ * @requires stcproperties.div !== null
+ *
+ */
+STCJS( stcproperties )
+
+Properties
+
+.version 			- textual description of the version used
+.recommended 		- textual description of the recommended THREEJS version used
+.uuid				- Random Identifier generated for the STC object
+.camera 			- THREE.Camera 
+.scene				- THREE.Scene
+.renderer			- THREE.WebGLRenderer
+.cubeData			- Object containing information related to the STC's cube shape
+	.invertedTime	- stcproperties.inverted
+	.size			- stcproperties.size
+	.currheigth		- current height of the STC
+	.startheigth	- size.y
+	.pos 			- stcproperties.cube_pos
+	.map 			- stcproperties.map
+	... several THREE Object that, for the sake of simplicity will not be listed
+.container			- stcproperties.div
+.controlZScale 		- stcproperties.control_z_scale
+.controlSemZoom 	- stcproperties.control_semantic_zoom
+.pov 				- stcproperties.pov
+.width				- stcproperties.width
+.height 			- stcproperties.height 
+.showTimeAxesLines 	- stcproperties.show_time_axis_lines
+.showTimeAxesLabels	- stcproperties.show_time_axis_lables
+.temporalUnity 		- stcproperties.temporal_unity
+.firstTimeLabel  	- stcproperties.first_time_label
+.highlightMapPlane 	- stcproperties.highlightMapPlane
+.drawShadows		- true|false(default) - if "shadows" of the data objects are being displayed over the map planes
+.drawHotShadows		- true|false(default) - if heatmaps of the data objects are being displayed over the map planes
+.highlightTimeAxis	- true(default)|false
+.timeAxisHighlightStyle	- stcproperties.timeAxisHighlightStyle
+.spaceHighlightStyle - stcproperties.spaceHighlightStyle
+
+Methods
+/**
+ * Draws an STC and places its controls over a div
+ */
+.drawSTC()
+
+/**
+ *
+ */
+.resetView()
+
+/**
+ * Adds layers of information to the STC and draws them
+ *
+ * @param layers - Array of STCJS.Layer representing data to display
+ * @param refresh (optional) - true|false to draw the layers on the STC after loading them
+ */
+.addLayers( layers, refresh )
+
+/**
+ * Removes layers of information from the STC
+ *
+ * @param layers - Array of STCJS.Layer representing data to remove
+ * @param refresh (optional) - true|false to update the display after removal
+ */
+.removeLayers( layers, refresh )
+
+/**
+ * Removes all contents from the STC
+ */
+.clearSTC()
+
+/**
+ * Selects a tile adequate to a bounding box
+ *
+ * @param boundBox - Object with up, down, left, right references
+ * @requires STC having a valid STCJS.TilesControl
+ */
+.fitBounds( boundBox )
+
+/**
+ * @return current STCJS.Tile displayed in the map plane
+ * @requires STC having a valid STCJS.TilesControl
+ */
+.getCurrentTile()
+
+Methods/Events - to be overrided
+
+/**
+ * @returns an object with the bounds of the STC
+ *	{up: _, down: _, left: _, right: _, start: _, end: _}
+ */
+.boundingBox()
+
+/**
+ * Converts a STPoint into a corresponding Vector3 point within the STC
+ * (Uses the mercator projection)
+ * @param stpoint - STPoint to be converted
+ */	
+.stpoint2stc( stpoint )
+
+current code:
+	// uses the mercator projection
+	var timeDomain = [bbox.start, bbox.end];
+	var timeRange = [ this.cubeData.planeTimeNorth.position.y-this.cubeData.planeTimeNorth.scale.y/2, this.cubeData.planeTimeNorth.position.y+this.cubeData.planeTimeNorth.scale.y/2]; //<---		
+	var time = UTILS.scaleDimension( timeDomain, timeRange, stpoint.timestamp );
+	
+	var topLeftPoint = new STPoint( bbox.up, bbox.left, -1, -1 );
+	
+	var south = UTILS.deg2rad( bbox.down );
+	var north = UTILS.deg2rad( bbox.up );
+	var west = UTILS.deg2rad( bbox.left );
+	var east = UTILS.deg2rad( bbox.right );
+			
+	var w = this.cubeData.size.x;
+	var h = this.cubeData.size.z; 
+	
+	var mercY = function( lat ){ return Math.log( Math.tan(lat/2 + Math.PI/4) ) };
+	
+	var ymin = mercY( south );
+	var ymax = mercY( north );
+	var xFactor = w/( east-west );
+	var yFactor = h/( ymax-ymin );
+	
+	var mapProjection = function( lat, lon )
+	{
+		var x = lon;
+		var y = mercY(lat);
+		
+		x = ( x-west )*xFactor;
+		y = ( ymax-y )*yFactor;
+		
+		return [x, y];
+	};
+	
+	var projPoint = mapProjection( UTILS.deg2rad( stpoint.latitude ), UTILS.deg2rad( stpoint.longitude ) );
+	
+	var lat = this.cubeData.pos.z-this.cubeData.size.z/2 + projPoint[1];
+	var lon = this.cubeData.pos.x-this.cubeData.size.x/2 + projPoint[0];
+		
+	var nstcpoint = new THREE.Vector3( lon, time, lat );
+		
+	return nstcpoint;
+
+/**
+ * Converts a Vector3 point (stcpoint) to an STpoint (with lat, lon, and timestamp)
+ * @param stcPoint - Vector3 point to be converted
+ */ 
+.stc2stpoint( stcPoint )
+
+current code:
+	var timeRange = [bbox.start, bbox.end];
+	var timeDomain = [context.cubeData.planeTimeNorth.position.y-context.cubeData.planeTimeNorth.scale.y/2, 
+		context.cubeData.planeTimeNorth.position.y+context.cubeData.planeTimeNorth.scale.y/2];
+
+	var lonRange = [bbox.left, bbox.right];
+	var latRange = [bbox.up, bbox.down]; // latitude increases inversely to the cube's coordinates
+
+	var lonDomain = [context.cubeData.pos.x-context.cubeData.size.x/2, context.cubeData.pos.x+context.cubeData.size.x/2];
+	var latDomain = [context.cubeData.pos.y-context.cubeData.size.y/2, context.cubeData.pos.y+context.cubeData.size.y/2];
+
+	var lat = UTILS.scaleDimension( latDomain, latRange, stcPoint.z );
+	var lon = UTILS.scaleDimension( lonDomain, lonRange, stcPoint.x );
+	var time = UTILS.scaleDimension( timeDomain, timeRange, stcPoint.y );
+
+	return new STPoint( lat, lon, 0, time );
+
+/**
+ * Converts a set of 3 coordinates into a 2D screen point
+ * @param x - x coordinate
+ * @param y - y coordinate
+ * @param z - z coordinate	 
+ * @return an object with two attributes, x and y, containing the x and y screen coordinates of the point x, y, z
+ */ 
+.stcTo2Dpoint( x, y, z )
+
+/**
+ * Updates the start and end attributes of the STC's bounding box
+ * and updated the visualization contents accourdingly
+ */
+.updateTemporalScale( timestampStart, timestampEnd )
+
+/**
+ * Forces the STC's contents to be redrawn
+ */
+.refresh()
+
+/**
+ * Forces the calculations and drawing of the 'data shadows' in the STC's map tile
+ * @requires drawing shadows or hot shadows options being activated
+ */
+.updateSTCMapShadows()
+
+/**
+ * Highlights a spatial location within the STC
+ * @param stPoint - STPoint representing the location
+ * @param removeDefault (optional) - true(default) | false to remove or not an existing spatial highlight
+ * @returns uuid with the created highlight
+ */
+.highlightSpatialPoint = function( stPoint, removeDefault )
+
+/**
+ * Highlights a spatial location within the STC
+ * @param startPoint - STPoint representing the inital point delimiting the geographical area
+ * @param endPoint - STPoint representing the final point delimiting the geographical area
+ * @param removeDefault (optional) - true | false to remove or not an existing spatial highlight
+ * @returns uuid with the created highlight
+ */
+.highlightSpatialArea( startPoint, endPoint, removeDefault )
+
+/**
+ * Removes a spatial highlight from the STC
+ * @param highlightUUID - uuid of the highlight that needs to be removed
+ */
+.removeSpatialHighlight( highlightUUID )
+
+/**
+ * Adds information to the STC as an highlight (similar to the addition of a layer)
+ * @param data - STCPointSet with the data to display/highlight
+ * @param properties - object containing the options to represent the highlighted data
+ *	stylePoints: STCJS.Style used to represent point data
+ *	styleLines:	STCJS.Style used to represent lines
+ *	UNTESTED FEATURES ON CURRENT VERSION :::::::::::::::::::::::::
+ *	highlightTPeriod: true|false to highlight the temporal planes with the period represented by the data
+ *	highlightTPeriodStyle: STCJS.Style used to represent the temporal highlight
+ *	highlightExtra: true|false to display a copy of the map bellow each data point element
+ *	highlightMapPlane: STCJS.Style used to represent the map plane highlight
+ * @returns uuid of the created highlight layer 
+ */
+.highlightData( data, properties )
+
+/**
+ * Removes a data highlight created by .highlightData
+ * @param huuid - uuid of the highlight layer to remove
+ */
+.removeDataHighlight( huuid )
+
+/**
+ * Creates a div over the STC view based on a given point
+ * @param stcPoint - THREE.Vertex3 with the view point to add the pop up
+ * @param innerHTML - html text to fill the pop up
+ * @returns div created for the pop up
+ */
+.popUpWindow( stcPoint, innerHTML )
+
+
+
+>> FUNCTIONS TO OVERRIDE <<
+
+/**
+ * (To override)
+ * Triggered whenever a map tile is changed as a result of a panning operation
+ * @param direction - direction of the pan {DIR.NORTH, DIR.SOUTH, DIR.EAST, DIR.WEST}
+ * @param newTile - current STCJS.Tile being displayed
+ */
+.onSTCMapPan( direction, newTile )
+
+/**
+ * (To override)
+ * Triggered whenever a map tile is changed as a result of a zooming operation
+ * @param zoomFactor - {-1, 0, 1} representing zoom out and zoom in respectively
+ * @param newTile - current STCJS.Tile being displayed
+ */
+.onSTCZoom( zoomFactor, newZoomTile )
+
+/**
+ * (To override)
+ * Triggered whenever the user presses the right mouse on the stc view
+ * to drag the STC around
+ * @param event - javascript mouse event
+ */
+.onSTCPanStart( event )
+
+/**
+ * (To override)
+ * Triggered whenever the user releases the right mouse on the stc view
+ * to drag the STC around
+ * @param event - javascript mouse event
+ */
+.onSTCPanStop( event )
+
+/**
+ * (To override)
+ * Triggered whenever the user double clicks over the map plane
+ *
+ * @param event - object containing information about the triggered event
+ * 	properties:
+ *		type: area | point - string
+ *		if type === "point"
+ *		point: STPoint with the selected location
+ *		if type === "area"
+ * 		shPoint: STPoint with one of the locations defining the selected area
+ *		ehPoint: STPoint with one of the locations defining the selected area
+ */
+.onSpatialHighlight( event )
+
+/**
+ * (To override)
+ * Triggered whenever the user double clicks over the temporal plane
+ * @param event - object containing information about the triggered event
+ *	properties:
+ *		highlightActive: true | false - if there is an active highlight
+ *		time: the highlighted time moment (only accessible when highlightActive)
+ */
+.onTemporalHighlight
+
+/**
+ * (To override)
+ * Triggered whenever the user runs with the mouse over the temporal plane
+ * @param event - object containing information about the triggered event
+ *	properties:
+ *		time: time corresponding to the position the mouse is highlighting
+ */
+.onTemporalPlaneHover( event )
+
+/**
+ * (To override)
+ * Triggered whenever the user changes the options related to the shadows on the stc
+ * @param event - object containing information about the triggered event
+ *	properties:
+ *		drawShadows: true | false - depending on whether the STC should have shadows drawn on its map or not
+ *		drawHotShadows: true | false - depending on whether the STC should have heatmaps drawn on its map or not
+ *		extraPlane: true | false - depending on whether the STC should have an aditional map plane for 
+ *			spatial highlightingor not
+ */
+.onSTCShadowTrigger( event )
+
+/**
+ * (To override)
+ * Triggered whenever the user passes with the mouse cursor over a feature in a STCJS Layer
+ * @param event - object containing information about the triggered event
+ *	properties:
+ *		layer:	STCJS.Layer selected
+ *		type:	STCJS.UTILS.OBJECT_TYPES with the feature type selected
+ *		data:	data contained in layer
+ *		if the selected feature consists of a point
+ *			datapointindex: index of the data point selected in layer
+ *			datapoint:	actual STPoint selected in layer
+ *			pointstyle:	STCJS.Style of the selected point
+ *		if the selected feature consists of a line
+ *			startpointindex: index of the data point representing the start of the line
+ *			endpointindex: index of the data point representing the end of the line
+ *			startdatapoint: STPoint data representing the start of the line
+ *			enddatapoint: STPoint data representing the start of the line
+ *			midpoint: estimated STPoint representing the intersection point of the mouse with the line
+ *			lineStyle: STCJS.Style of the selected line
+ */
+.onFeatureHover( event )
+
+/**
+ * (To override)
+ * Triggered whenever the user stops passing with the mouse cursor over a feature in a STCJS Layer
+ */
+.onFeatureHoverStop()
+
+########################################################################################################
+
+STCJS.Layer
+Abstract Class used to represent a layer of information
+
+Constructor
+
+/**
+ * @param name - string
+ * @param data - STPointSet
+ */
+STCJS.Layer( name, data )
+
+Properties
+.name -		name of the layer
+.data - 	layer data
+.visible -	true | false depending if the layer will be drawn on the STC or not
+.stc -		stc containing the layer
+
+Methods
+/**
+ * Associates an STC with the layer
+ * @param stc - STCJS to associate
+ */
+.setSTC( stc )		
+
+/**
+ * Forces the layer's contents to be drawn on the STC
+ */
+.redraw()
+
+/**
+ * Toogles the layer's visibility
+ */
+.switchVisibility()
+
+########################################################################################################
+
+STCJS.SpatioTemporalLayer
+Class representing a layer with spatio-temporal information
+@extents STCJS.Layer
+
+Constructor
+/**
+ * @param name - string
+ * @param data - STPointSet
+ * @properties
+ *		stylePoints: function to represent point data
+ *			 @param data - layer data
+ *			 @param dataPoint - current STPoint to stylize
+ *			 @param dataPointIndex - index of dataPoint in data
+ *			function( data, dataPoint, dataPointIndex )
+ *		styleLines:	function to represent lines/connections
+ *			 @param data - layer data
+ *			 @param dataPoint - current STPoint to stylize representing the start of the line
+ *			 @param dataPointIndex - index of dataPoint in data representing the start of the line
+ *			 @param dataPointIndex2 - index of dataPoint in data representing the end of the line
+ *			function( data, dataPoint, dataPointIndex, dataPointIndex2 )
+ *		styleHighlights: function to represent points or lines when they're highilghted 
+ *						(i.e. when the mouse cursor passes over the features)
+ *			 @param data - layer data
+ *			 @param dataPoint - STPoint (or start STPoint) to highlight
+ *			 @param dataPointIndex - index of dataPoint in data
+ *			 @param dataPointStyle - STCJS.Style used to represent dataPoint
+ *			function( data, dataPoint, dataPointIndex, dataPointStyle )
+ */
+STCJS.SpatioTemporalLayer( name, data, properties )
+
+Properties
+.representationObjects -	Array containing all THREEJS objects used to represent data in this Layer
+
+Methods
+/**
+ * @returns Array of the STPoint inside the STC's bounding box
+ */
+.getRepresentationVisiblePoints()
+
+/**
+ * Draws the layer on the STC
+ * @requires this.stc !== null
+ */
+.drawLayer()
+
+/**
+ * Removes the layer from the STC it is set on
+ * @requires this.stc !== null
+ */
+.removeLayer()
+
+/**
+ * Reshapes the layer based on STC's physical alterations, such as size
+ * or change of bounding box
+ */
+.updateRepresentationLocation()
+
+/**
+ * @returns object with data regarding the most recent highlighted data
+ *	properties:
+ *		.feature: THREEJS object used to represent the highlighted data
+ *		.dataPointIndex: index in the layer data the point highligthed is represented
+ *		.style: STCJS.Style used to represent the feature
+ *		.hstyle: STCJS.Style used to represent the highlighted feature
+ *		.hobject: when needed, auxiliar THREEJS object used for the highlight
+ */
+.currentHighlightInfo()
+
+/**
+ * Removes the most recent data highlight in this layer 
+ */
+.removeHighlight()
+
+/**
+ * Highlights a feature in a layer
+ * @param feature - feature to highlight
+ * @param dataPointIndex - index of the data point represented by feature
+ * @param vertexPoint - index of the feature used to represent the data point/line
+ * @param vertextPoint2(optional) - similar to the previous argument, but for defining lines
+ */
+.highlightFeature( feature, dataPointIndex, vertexPoint, vertexPoint2 )
+
+########################################################################################################
+
+STCJS.Style
+Abstract class to represent Styles
+Styles define what colours, sizes, textures, etc are used to represnet data
+
+Constructor
+/**
+ * @param properties (optional)
+ *		.size 			- float
+ *		.alpha			- float to represent transparency [0,1]
+ *		.startAlpha		- float to represent transparency [0,1]
+ *		.endAlpha		- float to represent transparency [0,1]
+ *		.colour 		- THREE.Color
+ *		.startColour	- THREE.Color - used in line styles
+ *		.endColour		- THREE.Color - used in line styles
+ *		.texture 		- THREE.Texture
+ *		.lineWidth 		- float used in line styles
+ *		.dashedLine		- true | false(default) - used in line styles
+ *		.lineDistance	- float used for dashed line representations
+ *		.totalSize 		- float used for dashed line representations
+ *		.dashSize		- float used for dashed line representations
+ *		.gapSize		- float used for dashed line representations
+ *	Unused/Untested in current version
+ *		.width
+ *		.height
+ *		.scale
+ *		.rotation
+ *		
+ */
+STCJS.Style( properties )
+
+Properties
+All properties described in the constructor are accessible
+
+Methods
+/*
+ * @param size - float
+ */
+.setSize( size )
+
+/*
+ * @param alpha - float
+ */
+.setAlpha( alpha )
+
+/*
+ * @param colour - THREE.Color
+ */
+.setColour( colour )
+
+/*
+ * @param r - float for red value
+ * @param g - float for green value
+ * @param b - float for blue value
+ */
+.setRGB( r, g, b )
+
+/*
+ * @param r - float for red value
+ * @param g - float for green value
+ * @param b - float for blue value
+ * @param a - float for alpha value [0,1]
+ */
+.setRGBA( r, g, b, a )
+
+/*
+ * @param texture - THREE.Texture
+ */
+.setTexture( texture )
+
+/*
+ * @param linewidth - float
+ */
+.setLineWidth( linewidth )
+
+/**
+ * Defines the parameters to turn a line representation into a dashed line
+ * @param lineDistance <Float> distance between the line segments
+ * @param totalSize <Float> line segments size
+ * @param dashSize <Float> size of the gaps between the lines
+ */ 
+.setDashLine( lineDistance, totalSize, dashSize )
+
+########################################################################################################
+
+STCJS.PointStyle or STCJS.ParticleStyle
+Classes used to represent point data as Particles (Points)
+@extends STCJS.Style
+
+Constructor
+/*
+ * @params (optional) - similar to the properties param in the STCJS.Style class
+ * For this style you will probably be more interested in using the following properties:
+ * 		.size
+ * 		.colour
+ * 		.texture
+ *		.alpha
+ */
+STCJS.PointStyle( params )
+
+########################################################################################################
+
+STCJS.CubeStyle
+Classes used to represent point data as Cube meshes
+@extends STCJS.Style
+
+Constructor
+/*
+ * @params (optional) - similar to the properties param in the STCJS.Style class
+ * For this style you will probably be more interested in using the following properties:
+ * 		.size
+ * 		.colour
+ * 		.texture
+ *		.alpha
+ *	In case you wish your point to have different x,y,z sizes, you can use the following properties instead:
+ *		.x
+ *		.y
+ *		.z
+ */
+STCJS.CubeStyle( params )
+
+Properties
+All properties described in the constructor are accessible
+
+########################################################################################################
+
+STCJS.SphereStyle
+Classes used to represent point data as Sphere meshes
+@extends STCJS.Style
+
+Constructor
+/*
+ * @params (optional) - similar to the properties param in the STCJS.Style class
+ * For this style you will probably be more interested in using the following properties:
+ * 		.size or .radius
+ * 		.colour
+ * 		.texture
+ *		.alpha
+ */
+STCJS.SphereStyle( params )
+
+Properties
+All properties described in the constructor are accessible
+
+########################################################################################################
+
+STCJS.LineStyle
+Classes used to represent lines connecting points with 'thin' lines
+@extends STCJS.Style
+
+Constructor
+/*
+ * @params (optional) - similar to the properties param in the STCJS.Style class
+ * For this style you will probably be more interested in using the following properties:
+ * 		.lineWidth - in windows will always be set to 1
+ * 		.colour 
+ *		.alpha
+ * To define different properties on the beginning and ending of the lines, use the properties:
+ *		.startColour
+ *		.endColour
+ *		.startAlpha
+ *		.endAlpha
+ */
+STCJS.LineStyle( params )
+
+Properties
+All properties described in the constructor are accessible
+
+########################################################################################################
+
+STCJS.PolyLineStyle
+Classes used to represent lines connecting points with 'thick' lines (each segment is a cylinder)
+@extends STCJS.Style
+
+Constructor
+/*
+ * @params (optional) - similar to the properties param in the STCJS.Style class
+ * For this style you will probably be more interested in using the following properties:
+ * 		.lineWidth
+ * 		.colour 
+ *		.alpha
+ * To define different properties on the beginning and ending of the lines, use the properties:
+ *		.startLineWidth
+ *		.endLineWidth
+ *		.startColour
+ *		.endColour
+ *		.startAlpha
+ *		.endAlpha
+ */
+STCJS.PolyLineStyle( params )
+
+Properties
+All properties described in the constructor are accessible
+
+########################################################################################################
+
+STCJS.Tile
+Class used to represent a Tile in the STC
+A Tile consists of the map used in the STC.
+
+Constructor
+
+/**
+ * @param image - string with the path to the texture to use as the map
+ * @param boundingBox - object representing the geographic boundaries represented by the Tile
+ * @param zoomlevel - number representing the zoom level of this tile
+ */
+STCJS.Tile( image, boundingBox, zoomlevel )
+
+Properties
+.image 		
+.bbox 		- same as boundingBox defined above
+.zoomlevel
+.north 		- STCJS.Tile at north or null if none exists
+.south 		- STCJS.Tile at south or null if none exists
+.east 		- STCJS.Tile at east or null if none exists
+.west 		- STCJS.Tile at west or null if none exists
+.zin 		- STCJS.Tile after a zoom in action or null if none exists
+.zout 		- STCJS.Tile after a zoom out action or null if none exists
+
+Methods
+/**
+ * @returns an object with .lat and .lon properties pointing to the estimated central point
+ * of the bounding box defined by this Tile
+ */
+.getTileCenter()
+
+########################################################################################################
+
+STCJS.TilesControl
+Class used to control STCJS.Tile's
+
+Constructor
+/**
+ * @param tiles - Array of STCJS.Tiles
+ * @requires tiles organized by zoom level 
+ */
+STCJS.TilesControl( tiles )
+
+Properties
+.tiles
+.currentTile 	- STCJS.Tile displayed in the STC
+.minZoom		- number
+.maxZoom		- number
+
+Methods
+/**
+ * Moves to the north tile of currentTile
+ */
+.goNorth()
+
+/**
+ * Moves to the south tile of currentTile
+ */
+.goSouth()
+
+/**
+ * Moves to the east tile of currentTile
+ */
+.goEast()
+
+/**
+ * Moves to the west tile of currentTile
+ */
+.goWest()
+
+/**
+ * Moves to the zoomed in tile of currentTile
+ */
+.zoomIn()
+
+/**
+ * Moves to the zoomed out tile of currentTile
+ */
+.zoomOut()
+
+/**
+ * Selects the tile in the highest zoom level possible that includes a bounding box
+ * @param bbox2fit - object with .up, .down, .left. rigth properties defining the bounding box
+ */
+.fitInBBox( bbox2fit )
+
+/**
+ * Selects the tile in a zoom level with the closest center to center?
+ * @param zoom - number
+ * @param center - .x, .y object
+ */
+.setClosestZoomCenter( zoom, center )
+
+########################################################################################################
+
+STCJS.UTILS
+"Class" with general auxiliar methods and properties
+For a matter of simplicity only the most 'relevant' will be mentioned
+
+.TIME_FLAGS.ONE_HOUR = 3600 sec
+.TIME_FLAGS.ONE_DAY = 86400 sec
+.TIME_FLAGS.ONE_WEEK = 604800 = 7 days
+.TIME_FLAGS.ONE_MONTH = 2592000 = 30 days
+.TIME_FLAGS.NONE = -1
+
+.OBJECT_TYPES.H_PARTICLE_POINT 	- to represent particle points used in feature highlighting
+.OBJECT_TYPES.HCLINE 			- to represent lines used in feature highlighting
+.OBJECT_TYPES.PARTICLE_POINT 	- to represent particle points
+.OBJECT_TYPES.CUBE_POINT 		- to represent cubes
+.OBJECT_TYPES.SPHERE_POINT 		- to represent spheres
+.OBJECT_TYPES.LINE 				- to represent 'thin' lines
+.OBJECT_TYPES.POLYLINE 			- to represent 'thick' lines
+
+/**
+ * Calculates the closest point to pointC in the line that passes through pointA and pointB
+ * @param stc - UNUSED IN THE CURRENT VERSION
+ * @param pointA - 3D point where the line 'begins'
+ * @param pointB - 3D point where the line 'ends'
+ * @param pointC - 3D point from which we want to find the closest point of
+ * @returns closest point of pointC in the line defined by pointA and pointB
+ */
+.getClosestPointTo3DLine( stc, pointA, pointB, pointC )
+
+/** 
+ * Converts a timestamp to a textual format based on the STC's current temporal granularity
+ * @param time - timestamp in mlsecs
+ * @return time in a textual format
+ */ 
+.getTextualTimestamp( time, axisUnit )
+
+/**
+ * Adapted from https://stemkoski.github.io/Three.js/Sprite-Text-Labels.html
+ */
+.getTextSprite( message, params )
+
+/**
+ * Converst a colour in hsv format to rbb
+ * @param h <Float> hue
+ * @param s <Float> staturation
+ * @param v <Float> value
+ */ 
+.hsvToRgb( h, s, v ) 
+
+/**
+ * Gets total colours
+ * @param total <Integer> number of colours
+ * @returns <Array:<String>> Array with total nº of colours
+ */
+.getRandomColours( total )
+
+/**
+* Generates glsl code for the vertex shader to be used for the definition of particle points
+* @param attr - key: <bool>value array with the the types of attributes in need to be used 
+* @returns <String> glsl code
+*/  
+.generateParticleVertexShader( attr )
+
+/**
+* Generates glsl code for the fragment shader to be used for the definition of particle points
+* @param attr - key: <bool>value array with the the types of attributes in need to be used 
+* @returns <String> glsl code
+*/ 
+.generateParticleFragmentShader( attr )
+
+/**
+* Generates glsl code for the vertex shader to be used for the definition of lines
+* @param attr - key: <bool>value array with the the types of attributes in need to be used 
+* @returns <String> glsl code
+*/ 
+.generateLineVertexShader( attr )
+
+/**
+* Generates glsl code for the fragment shader to be used for the definition of lines
+* @param attr - key: <bool>value array with the the types of attributes in need to be used 
+* @returns <String> glsl code
+*/ 
+.generateLineFragmentShader( attr )
+
+/**
+ * Genrates a texture/sprite
+ * @param width <Float> width of the sprite
+ * @param height <Float> height of the spirte
+ * @returns <Canvas> representing the sprite
+ */	
+.generateSprite( width, height ) 
+
+/**
+ * Returns a div's dimensions
+ * @param div
+ * @returns key:value array with div's dimensions
+ */ 
+.getDivSize = function( div )

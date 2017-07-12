@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title> STCJS - Example 7 </title>	
+		
+		<!-- #1 RECOMMENDED LIBRARIES-->
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+	    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+		<!-- stc ########################## -->
+		<script src="assets/lib/three-r73.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/CombinedCamera.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/OrbitControls.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/trajectory.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/stcjs.js"></script>
+		<script src="assets/lib/simpleheat-gh-pages/simpleheat.js"></script>
+		<!-- JUST USING THIS TO PROVIDE SOME TIMES -->
+		<script src="assets/js/nytyles.js"></script>
+
+		<!-- MAIN SCRIPT -->
+		<script type="text/javascript">
+			var stc;
+			// random example: lat, lng, unix timestamp, label
+			var exampleData = 
+			[
+				40.750919,-73.978355,1356998880,"pu",
+				40.750919,-73.978355,1356999660,"do",
+				40.750919,-73.978355,1356999840,"pu",
+				40.750919,-73.978355,1357000140,"do",
+				40.750919,-73.978355,1357000260,"pu",
+				40.721375,-74.000313,1357001280,"do",
+				40.693485,-73.988731,1357001400,"pu",
+				40.678234,-73.982559,1357002240,"do",
+				40.678234,-73.982559,1357002840,"pu",
+				40.678234,-73.982559,1357003020,"do",
+				40.678234,-73.982559,1357003080,"pu",
+				40.678234,-73.982559,1357003200,"do",
+				40.678234,-73.982559,1357003260,"pu",
+				40.695877,-73.969681,1357003980,"do",
+				40.695877,-73.969681,1357004040,"pu",
+				40.719265,-73.990105,1357005360,"do",
+				40.752537,-73.973068,1357005540,"pu",
+				40.784702,-73.96756,1357006620,"do",
+				40.784702,-73.96756,1357006740,"pu",
+				40.805027,-73.966026,1357007400,"do",
+				40.809155,-73.963219,1357008300,"pu",
+				40.809155,-73.963219,1357008540,"do",
+				40.809155,-73.963219,1357008660,"pu",
+				40.77346,-73.982292,1357009080,"do",
+				40.77346,-73.982292,1357009260,"pu",
+				40.768909,-73.972336,1357009920,"do",
+				40.749107,-73.972672,1357011300,"pu",
+				40.742382,-73.982605,1357011540,"do",
+				40.742382,-73.982605,1357011840,"pu",
+				40.770309,-73.975296,1357012920,"do",
+				40.780144,-73.981598,1357013100,"pu",
+				40.769482,-73.984612,1357013340,"do",
+				40.769482,-73.984612,1357013400,"pu",
+				40.769482,-73.984612,1357013640,"do",
+				40.769482,-73.984612,1357013880,"pu",
+				40.836224,-73.94812,1357014780,"do",
+				40.836224,-73.94812,1357014840,"pu",
+				40.836224,-73.94812,1357015020,"do",
+				40.777885,-73.989906,1357015920,"pu",
+				40.756218,-73.987045,1357016520,"do",
+				40.756218,-73.987045,1357016520,"pu",
+				40.734489,-73.990067,1357017180,"do",
+				40.749523,-73.945267,1357060500,"pu",
+				40.743221,-73.920731,1357060740,"do",
+				40.743221,-73.920731,1357060920,"pu",
+				40.743221,-73.920731,1357061040,"do",
+				40.759716,-73.961014,1357061820,"pu",
+				40.747086,-73.974258,1357062060,"do",
+				40.735352,-73.98275,1357062240,"pu",
+				40.736252,-73.994049,1357062540,"do",
+				40.733307,-74.005531,1357063080,"pu",
+				40.733307,-74.005531,1357063320,"do",
+				40.751911,-73.993629,1357063740,"pu",
+				40.757568,-73.983147,1357064640,"do",
+				40.749378,-73.992317,1357065840,"pu",
+				40.737686,-74.000427,1357066140,"do",
+				40.737686,-74.000427,1357066560,"pu",
+				40.748013,-73.996536,1357066860,"do",
+				40.748013,-73.996536,1357067580,"pu",
+				40.743076,-73.977158,1357068600,"do",
+				40.734089,-73.986809,1357069080,"pu",
+				40.743641,-73.979607,1357069380,"do",
+				40.743641,-73.979607,1357069620,"pu"
+			];
+
+			var timerL = -1;
+			var deltaTime = 600;
+			var currTime;
+			$(window).ready( function(){
+				initSTC();
+				uploadData();
+
+				var bbox = stc.boundingBox();
+				currTime = bbox.start;
+				$("#slider2").slider({
+					//range: true,
+					min: bbox.start,
+					max: bbox.end,
+					value: bbox.start,
+					slide: function( event, ui )
+					{
+						currTime = ui.value;
+					},
+					stop: function( event, ui )
+					{
+						currTime = ui.value;	
+					}
+				});
+
+				$("#Play").on('click', function(){
+
+					if( timerL == -1 ){
+						timerL = window.setInterval( 
+							function(e){updateFrame()}, 100 );
+						$("#Play").html("Pause");
+					}
+					else{
+						window.clearInterval(timerL);
+						timerL = -1;
+						$("#Play").html("Continue");
+					}
+				});
+				
+			});
+
+			function updateFrame()
+			{
+				if( currTime >= stc.boundingBox().end ){
+					window.clearInterval(timerL);
+					timerL = -1;
+					currTime = stc.boundingBox().start;
+					$("#Play").html("Start");
+				}else{
+					stc.updateTemporalFocus( true, stc.boundingBox().start, currTime+deltaTime );
+				}
+				currTime += deltaTime;
+				$("#slider2").slider("value", currTime);
+			}
+
+			// Create the STC
+			function initSTC()
+			{
+				var container = document.getElementById( "stcContainer" );
+				var properties = {
+					div: stcContainer,
+					size: {x:500, y:500, z:500},
+					pov: {x:0, y:0, z:1250},
+					tiles: NY_TYLES()	 
+				};
+
+				stc = new STCJS( properties );
+				stc.drawSTC();
+			}
+
+			// Draw data into the STC
+			function uploadData()
+			{
+				var data = new STPointSet( "example" );
+				var points = [];
+				for( var i = 0; i < exampleData.length; i+=4 )
+				{
+					var point = new STPoint( exampleData[i], exampleData[i+1], 0, exampleData[i+2], exampleData[i+3], {label:exampleData[i+4]} );
+					points.push( point );
+				}
+				data.appendPoints( points );
+				data.boundingBox();
+
+				// Create and stylize the layer
+				var layer = new STCJS.SpatioTemporalLayer( "Example Layer", data, {
+					styleHighlights: null,
+					stylePoints: customPoints, // or null if no points are to be drawn
+					styleLines: customLines // // or null if no points are to be drawn
+				});
+				stc.addLayers( [layer], true );
+			}
+
+			// each point will have a random colour and a random transparency
+			function customPoints( data, dataPoint, dataPointIndex )
+			{
+
+				var texture = new THREE.ImageUtils.loadTexture( "./assets/img/glyphs/default.png" );
+				var colour = (dataPointIndex % 2 == 0 )? 0xff0000 : 0x0000ff;// UTILS.getRandomColour();
+				var styleProperties = {
+					size: 10, 
+					colour: new THREE.Color( colour ), 
+					texture: texture,
+					alpha: 1 //0.5+Math.random()/2
+				};
+				// particle point
+				var style = new STCJS.PointStyle( styleProperties );
+				// cube point
+				//var style = new STCJS.CubeStyle( styleProperties );
+				//var style = new STCJS.SphereStyle( styleProperties );
+
+				return style; // if you return null, "this" point will not be drawn
+			}
+
+			// each line will have a random gradient
+			function customLines( data, dataPoint, dataPointIndex, dataPointIndex2 )
+			{
+				var startColour = new THREE.Color( 0x000 );
+				var endColour = new THREE.Color( 0x000 );
+
+				var styleProperties = {
+					startColour: startColour,
+					endColour: endColour,
+					startAlpha: 1,
+					endAlpha: 1,
+					startLineWidth: 1,
+					endLineWidth: 2
+				};
+
+				// thin line
+				//var style = new STCJS.LineStyle( styleProperties );
+				// thick line 
+				var style = new STCJS.PolyLineStyle( styleProperties );
+
+				return style; // if you return null, "this" line segment will not be drawn
+			}
+
+		</script>
+
+		<!-- STYLES -->
+		<style type="text/css">
+			#stcContainer
+			{
+				width: 700px;
+				height: 700px;
+				border: 1px solid black;
+			}
+			#slider2
+			{
+				width: 700px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="main_container">
+			<h1>Example #7: Animated... STC O_O?</h1>
+			<div id="stcContainer"></div>
+			<br>
+			<div id="slider2"></div>
+			<button id="Play">START</button> 
+		</div>
+	</body>
+</html>

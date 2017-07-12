@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title> STCJS - Example 4 </title>	
+		
+		<!-- #1 RECOMMENDED LIBRARIES-->
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+	    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+		<!-- stc ########################## -->
+		<script src="assets/lib/three-r73.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/CombinedCamera.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/OrbitControls.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/trajectory.js"></script>
+		<script src="assets/lib/stcjs-3.1-tr69/stcjs.js"></script>
+		<script src="assets/lib/simpleheat-gh-pages/simpleheat.js"></script>
+		<!-- JUST USING THIS TO PROVIDE SOME TIMES -->
+		<script src="assets/js/nytyles.js"></script>
+
+		<!-- MAIN SCRIPT -->
+		<script type="text/javascript">
+			var stc;
+			// random example: lat, lng, unix timestamp, label
+			var exampleData = 
+			[
+				40.678234,-73.982559,1357003080,"a", 
+				40.678234,-73.982559,1357003200,"b",
+				40.678234,-73.982559,1357003260,"c",
+				40.695877,-73.969681,1357003980,"d",
+				40.695877,-73.969681,1357004040,"e",
+				40.719265,-73.990105,1357005360,"f",
+				40.752537,-73.973068,1357005540,"g",
+				40.784702,-73.967560,1357006620,"h"
+			]
+
+			$(window).ready( function(){
+				initSTC();
+				uploadData();
+			});
+
+			// Create the STC
+			function initSTC()
+			{
+				var container = document.getElementById( "stcContainer" );
+				var properties = {
+					div: stcContainer,
+					size: {x:500, y:500, z:500},
+					pov: {x:0, y:0, z:1250},
+					tiles: NY_TYLES(),
+					inverted: true	 
+				};
+
+				stc = new STCJS( properties );
+				stc.drawSTC();
+
+		
+			}
+
+			// Draw data into the STC
+			function uploadData()
+			{
+				var data = new STPointSet( "example" );
+				var points = [];
+				for( var i = 0; i < exampleData.length; i+=4 )
+				{
+					var point = new STPoint( exampleData[i], exampleData[i+1], 0, exampleData[i+2], exampleData[i+3], {label:exampleData[i+4]} );
+					points.push( point );
+				}
+				data.appendPoints( points );
+				data.boundingBox();
+
+				var layer = new STCJS.SpatioTemporalLayer( "Example Layer", data, {});
+				stc.addLayers( [layer], true );
+			}
+
+		</script>
+
+		<!-- STYLES -->
+		<style type="text/css">
+			#stcContainer
+			{
+				width: 700px;
+				height: 700px;
+				border: 1px solid black;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="main_container">
+			<h1>Example #4: Reversed Heigth</h1>
+			<div id="stcContainer"></div>
+		</div>
+	</body>
+</html>
